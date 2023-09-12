@@ -114,6 +114,7 @@ window 操作：快捷键+修饰符
 
 pane 操作：快捷键+修饰符  
 `control-b` 改变面板，修饰符：`"` 水平分裂窗口，`%` 垂直分裂窗口，方向键 改变聚焦的面板，空格 将所有面板等距分布，`z` 使面板占据整个窗口（或恢复），`x` 关闭当前面板，`control-arrow key` 按箭头方向调整大小，`!` 将当前面板拆分为独立窗口  
+`{}` 将当前面板与上、下一个交换位置，`;o` 切换到上、下一个面板  
 
 如果在 tmux 中想对终端使用 control-b，则需按两次  
 
@@ -215,9 +216,29 @@ git 存在一个 stagin area，决定 git 在下次创建快照的时候会包�
 
 
 
-## debugging and profiling  
+## 7.debugging and profiling  
 
 
+`logger` 向系统日志中写入  
+`tac` 将反向输出文件内容，与 `cat` 相反  
 
+- real time：程序开始运行到结束的总时间
+- user time：CPU 执行用户级别代码所用的时间
+- system time：CPU 执行内核级别代码所用的时间  
+
+
+### profilers  
+
+- tracing profilers：会在代码中插入内容，与原本的代码一起运行，在进入函数的时候记录相关信息得出运行时间
+- sampling profilers：每隔一小段时间暂停程序，报告当前执行到的位置  
+
+内存分析器，python memory\_profiler，C valgrind  
+`perf` 与 `time` 类似，运行程序并跟踪内存相关的统计数据  
+
+lsof 列出被进程打开的各种文件的信息  
+hyperfine 可对两个程序的执行情况（用时等）进行比较  
+
+htop, du, ncdu  
+可视化工具：flame graph
 
 
