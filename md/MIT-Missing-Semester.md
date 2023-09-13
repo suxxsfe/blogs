@@ -241,4 +241,65 @@ hyperfine 可对两个程序的执行情况（用时等）进行比较
 htop, du, ncdu  
 可视化工具：flame graph
 
+## 8.meta programming  
+
+### build system  
+
+make 需要给出构建的目标，目标所需的依赖，从依赖编译出目标的规则  
+`make <target>` 将构建指定的目标，如果没有参数来指定，默认会构建第一个  
+
+基本的语法是：  
+
+```plaint  
+<target> : <prerequisites>
+[tab]  <commands>
+```  
+
+规则即为对依赖项执行的命令，命令前默认必须为 tab，可以通过更改内置变量 `.RECIPEPREFIX` 控制这个前缀  
+命令可以有多行，但每行在一个独立的 shell 中运行，也就是变量等无法继承共享  
+可以使用分号将所有命令写在一行，也可在 target 前一行声明 `.ONESHELL:`  
+
+`%` 可以进行模式匹配，例如 `%.o: %.c` 让所有 o 文件依赖相同名字的 c 代码  
+makefile 定义变量与 shell 相似，也存在一些自动变量，`$*` 将被扩展为上面一行说的的匹配的模式，`$@` 扩展为目标文件名，`$<` 扩展为第一个依赖，`@^` 扩展为全部依赖并用空格隔开  
+也存在一些[内置变量](https://www.gnu.org/software/make/manual/html_node/Implicit-Variables.html)  
+定义函数的方法是  
+
+```makefile  
+define function
+endef
+```  
+
+调用函数是 `$(function arguments)`，存在一些[内置函数](https://www.gnu.org/software/make/manual/html_node/Functions.html)  
+
+phony target 是一个操作而不是文件，作为一种伪目标，例如：  
+
+```makefile 
+.PHONY: clean
+clean:
+      rm *.o
+```  
+
+当没有任何叫做 clean 的文件时，第一行可以省略  
+当我们最终构建的结果有多个文件时，可以使用 phony target `source: a b c`，这样只需执行 `make source` 一条命令，即可构建出三个文件  
+也可定义 test 目标，来执行测试  
+
+### semantic versioning  
+
+`x.y.z` 分别代表主要、次要、补丁版本号  
+在补丁更新中应增加补丁版本号，进行了向前兼容的更新时应增加次要版本号，进行了不向前兼容的更新时应增加主要版本号  
+因此，在 x 与需要依赖的版本相同时，只要 y 大于等于需要依赖的版本，即可成功依赖  
+
+lockfile 列出了当前每个依赖所对应的具体版本号，避免了构建程序自动将依赖更新到其他版本  
+vendoring 指为把依赖直接复制到项目中  
+
+### others  
+
+continues integration 持续集成，一种类似于钩子函数的东西，例如 github pages, codecov 等，`.git/hooks` 也包含一些执行类似功能的脚本  
+
+tests  
+
+- 单元测试，集成测试，回归测试
+- mocking  
+
+
 
